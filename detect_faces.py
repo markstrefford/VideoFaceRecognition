@@ -2,11 +2,9 @@
 # python detect_faces.py --face cascades/haarcascade_frontalface_default.xml --image images/obama.png
 
 # import the necessary packages
-import argparse
-
-import cv2
-
+import argparse, cv2
 from utils.eyetracker import EyeTracker
+from utils import imgutils
 
 
 # construct the argument parse and parse the arguments
@@ -25,7 +23,7 @@ args = vars(ap.parse_args())
 
 # load the image then resize and convert it to grayscale
 image = cv2.imread(args["image"])
-frame = imutils.resize(image, width = 300)
+frame = imgutils.resize(image, width = 250)
 gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
 # find faces in the image
@@ -49,8 +47,12 @@ rects = et.track(gray)
 
 # loop over the face bounding boxes and draw them
 for rect in rects:
-	cv2.rectangle(frame, (rect[0], rect[1]), (rect[2], rect[3]), (0, 255, 0), 2)
+    cv2.rectangle(frame, (rect[0], rect[1]), (rect[2], rect[3]), (0, 255, 0), 2)
+    cropped = frame[rect[1]:rect[3] , rect[0]:rect[2]]
+    print "Rectangle: x1=%d y1=%d x2=%d y2=%d", (rect[0], rect[1], rect[2], rect[3])
+    print "Cropped: %d:%d, %d:%d", (rect[1], rect[3], rect[0], rect[2])
 
 # show the detected faces
-cv2.imshow("Faces", image)
+cv2.imshow("Faces", frame)
+cv2.imshow("Cropped", cropped)
 cv2.waitKey(0)

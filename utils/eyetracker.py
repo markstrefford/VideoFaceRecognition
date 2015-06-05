@@ -23,9 +23,10 @@ class EyeTracker:
 			rects.append((fX, fY, fX + fW, fY + fH))
 			
 			# detect eyes in the face ROI
-			eyeRects = self.eyeCascade.detectMultiScale(faceROI,
-				scaleFactor = 1.1, minNeighbors = 10, minSize = (20, 20),
-				flags = cv2.cv.CV_HAAR_SCALE_IMAGE)
+			# eyeRects = self.eyeCascade.detectMultiScale(faceROI,
+			# 	scaleFactor = 1.1, minNeighbors = 10, minSize = (20, 20),
+			# 	flags = cv2.cv.CV_HAAR_SCALE_IMAGE)
+			eyeRects=[]
 
 			# loop over the eye bounding boxes
 			for (eX, eY, eW, eH) in eyeRects:
