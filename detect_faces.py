@@ -64,14 +64,11 @@ fr.train(images_array, labels_array)
 print "Done!"
 
 # Load the image to "recognise"
+# Convert it to greyscale, resize, etc.
 print "Loading an image to test against..."
 image = cv2.imread(args["image"])
-gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-
-# Convert it to greyscale, resize, etc.
-image = cv2.imread(args["image"])
-frame = imgutils.resize(image, width=75)
-gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+gray = cv2.cvtColor(image, cv2.IMREAD_GRAYSCALE)
+frame = imgutils.resize(gray, width=300)
 
 # Recognise the face in it
 et = EyeTracker(args["face"], args["eye"])
@@ -81,6 +78,18 @@ print "I found %d face(s)" % (len(rects))
 # loop over the face bounding boxes and draw them
 for rect in rects:
     cv2.rectangle(frame, (rect[0], rect[1]), (rect[2], rect[3]), (0, 255, 0), 2)
+    test_face = imgutils.cropface(frame, (rect[0], rect[1]), (rect[2], rect[3]))
+    print "Image size ", test_face.shape[1], test_face.shape[0]
+    test_array = np.asarray(test_face)
+    prediction = fr.predict(test_face)
+    print "I think I've found ", names[prediction]
+    cv2.imshow(names[prediction], test_face)
+    cv2.waitKey(0)
+
+# Start recognition
+print "Starting recognition..."
+fr.predict()
+
 
 
 #
@@ -106,28 +115,28 @@ for rect in rects:
 # 	minSize = (30, 30))
 # print "I found %d face(s)" % (len(faceRects))
 
-rects = et.track(gray)
-print "I found %d face(s)" % (len(rects))
-
-# loop over the faces and draw a rectangle around each
-# for (x, y, w, h) in faceRects:
-#     cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 2)
-#     print "Face at %d %d %d %d" % (x,y,w,h)
-
-# detect faces and eyes in the image
-rects = et.track(gray)
-
-# loop over the face bounding boxes and draw them
-for rect in rects:
-    cv2.rectangle(frame, (rect[0], rect[1]), (rect[2], rect[3]), (0, 255, 0), 2)
-    cropped = frame[rect[1]:rect[3], rect[0]:rect[2]]
-    print "Rectangle: x1=%d y1=%d x2=%d y2=%d", (rect[0], rect[1], rect[2], rect[3])
-    print "Cropped: %d:%d, %d:%d", (rect[1], rect[3], rect[0], rect[2])
-
+# rects = et.track(gray)
+# print "I found %d face(s)" % (len(rects))
+#
+# # loop over the faces and draw a rectangle around each
+# # for (x, y, w, h) in faceRects:
+# #     cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 2)
+# #     print "Face at %d %d %d %d" % (x,y,w,h)
+#
+# # detect faces and eyes in the image
+# rects = et.track(gray)
+#
+# # loop over the face bounding boxes and draw them
+# for rect in rects:
+#     cv2.rectangle(frame, (rect[0], rect[1]), (rect[2], rect[3]), (0, 255, 0), 2)
+#     cropped = frame[rect[1]:rect[3], rect[0]:rect[2]]
+#     print "Rectangle: x1=%d y1=%d x2=%d y2=%d", (rect[0], rect[1], rect[2], rect[3])
+#     print "Cropped: %d:%d, %d:%d", (rect[1], rect[3], rect[0], rect[2])
+#
 
 # show the detected faces
-cv2.imshow("Faces", frame)
-cv2.imshow("Cropped", cropped)
-cv2.waitKey(0)
+# cv2.imshow("Faces", frame)
+# cv2.imshow("Cropped", cropped)
+# cv2.waitKey(0)
 
 
