@@ -29,18 +29,28 @@ import os.path
 
 if __name__ == "__main__":
 
-    if len(sys.argv) != 2:
-        print "usage: create_csv <base_path>"
+    if len(sys.argv) != 3:
+        print "usage: create_csv <base_path> <csv_path>"
         sys.exit(1)
 
     BASE_PATH=sys.argv[1]
+    CSV_PATH=sys.argv[2]
     SEPARATOR=";"
 
-    label = 0
+    # TODO: Label should be the last directory name (so ideally the name of the person!)
+    label = "n/a"
+    csvfile = open(CSV_PATH, "w")
+
     for dirname, dirnames, filenames in os.walk(BASE_PATH):
         for subdirname in dirnames:
             subject_path = os.path.join(dirname, subdirname)
             for filename in os.listdir(subject_path):
-                abs_path = "%s/%s" % (subject_path, filename)
-                print "%s%s%d" % (abs_path, SEPARATOR, label)
-            label = label + 1
+            # Check we haven't processed this file already!
+                if filename.find("face") != 0:
+                    label = os.path.basename(subject_path)
+                    abs_path = "%s/%s" % (subject_path, filename)
+                    print "%s%s%s" % (abs_path, SEPARATOR, label)
+                    csvfile.write(abs_path + SEPARATOR + label + "\n")
+
+    csvfile.close()
+
