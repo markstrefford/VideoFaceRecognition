@@ -1,5 +1,16 @@
-# USAGE
-# python detect_faces.py --face cascades/haarcascade_frontalface_default.xml --image images/obama.png
+#
+# Face recognition from streaming video
+#
+# Written by Mark Strefford
+# Copyright 2015 Timelaps Robotics Limited
+#
+
+# The following have been used for inspiration:
+#
+# https://github.com/slobdell/facebook_face_training_set
+# http://docs.opencv.org/modules/contrib/doc/facerec/tutorial/facerec_video_recognition.html
+# http://www.pyimagesearch.com
+#
 
 # import the necessary packages
 import argparse, cv2, os, uuid
@@ -14,7 +25,7 @@ ap.add_argument("-f", "--face", required=True,
                 help="path to where the face cascade resides")
 ap.add_argument("-e", "--eye", required=True,
                 help="path to where the eye cascade resides")
-ap.add_argument("-i", "--images", required=True,
+ap.add_argument("-t", "--training", required=True,
                 help="path to where the image list csv file resides")
 ap.add_argument("-i", "--image", required=True,
                 help="path to where the image to recognise resides")
@@ -23,28 +34,33 @@ args = vars(ap.parse_args())
 # Load csv file
 images = []
 labels = []
+names = []
 count = 0
-fileList = open(args["images"]).readlines()
-args["images"].close()
+fileList = open(args["training"]).readlines()
 
 # Parse and load the images and the labels
+print "Loading training data set..."
 for imageInfo in fileList:
     file = imageInfo.split(";")[0]
     face = cv2.imread(file, cv2.IMREAD_GRAYSCALE)
-    images.append = np.asarray(face)
-    label = imageInfo.split(";")[1]
-    labels.append = label
+    images.append(np.asarray(imgutils.resize(face, width=225)))
+    name = imageInfo.split(";")[1]
+    names.append(name)
+    labels.append(count)
     count += 1
 
 # Get image size in case its needed later
 im_width = images[0].shape[1]
 im_height = images[1].shape[0]
+print "Done!"
 
 # Call the vision detection algorithm to learn from this data set
+print "Training the Fisher Face Recognizer..."
 fr = cv2.createFisherFaceRecognizer()
 images_array = np.asarray(images)
 labels_array = np.asarray(labels)
 fr.train(images_array, labels_array)
+print "Done!"
 
 # Load the image to "recognise"
 image = cv2.imread(args["image"])
