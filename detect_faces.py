@@ -43,7 +43,7 @@ print "Loading training data set..."
 for imageInfo in fileList:
     file = imageInfo.split(";")[0]
     face = cv2.imread(file, cv2.IMREAD_GRAYSCALE)
-    images.append(np.asarray(imgutils.resize(face, width=225)))
+    images.append(np.asarray(imgutils.resize(face, width=75)))
     name = imageInfo.split(";")[1]
     names.append(name)
     labels.append(count)
@@ -57,18 +57,20 @@ print "Done!"
 # Call the vision detection algorithm to learn from this data set
 print "Training the Fisher Face Recognizer..."
 fr = cv2.createFisherFaceRecognizer()
+# fr = cv2.createEigenFaceRecognizer()
 images_array = np.asarray(images)
 labels_array = np.asarray(labels)
 fr.train(images_array, labels_array)
 print "Done!"
 
 # Load the image to "recognise"
+print "Loading an image to test against..."
 image = cv2.imread(args["image"])
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
 # Convert it to greyscale, resize, etc.
 image = cv2.imread(args["image"])
-frame = imgutils.resize(image, width=250)
+frame = imgutils.resize(image, width=75)
 gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
 # Recognise the face in it

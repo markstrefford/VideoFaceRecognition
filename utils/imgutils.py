@@ -70,32 +70,32 @@ def cropface(image, (x1, y1), (x2, y2), width=75):
     print "Initial dimensions:"  , face_width, face_height, " aspect: " , face_aspect
 
     # Reshape the face is we don't have a perfect aspect ratio of 1:1 (this is highly unlikely!!)
-    if face_aspect != 1:
-
-        # Face width < face height
-        if face_aspect < 1:
-            # Reduce height to be 1:1 ratio
-            new_height = face_height * face_aspect
-            y1 += (face_height - new_height) / 2
-            y2 -= (face_height - new_height) / 2
-
-        # Face height < face width
-        elif face_aspect > 1:
-            # Reduce width to be 1:1 ratio
-            new_width = face_width / face_aspect
-            x1 += (face_width - new_width) / 2
-            x2 -= (face_width - new_width) / 2
-
-    new_aspect = (x2 - x1) / (y2 - y1)
-    print "Cropping to ", x2 ,x1, y2 , y1, new_aspect
-    cv2.imshow('Original', image)
-    face = image[y1 : y2, x1 : x2]
-    cv2.imshow('Cropped', face)
-    cv2.waitKey(0)
-    print "Cropped face size ", face.shape[1], face.shape[0]
+    # if face_aspect != 1:
+    #
+    #     # Face width < face height
+    #     if face_aspect < 1:
+    #         # Reduce height to be 1:1 ratio
+    #         new_height = face_height * face_aspect
+    #         y1 += (face_height - new_height) / 2
+    #         y2 -= (face_height - new_height) / 2
+    #
+    #     # Face height < face width
+    #     elif face_aspect > 1:
+    #         # Reduce width to be 1:1 ratio
+    #         new_width = face_width / face_aspect
+    #         x1 += (face_width - new_width) / 2
+    #         x2 -= (face_width - new_width) / 2
+    #
+    # new_aspect = (x2 - x1) / (y2 - y1)
+    # print "Cropping to ", x2 ,x1, y2 , y1, new_aspect
+    # cv2.imshow('Original', image)
+    # face = image[y1 : y2, x1 : x2]
+    # cv2.imshow('Cropped', face)
+    # cv2.waitKey(0)
+    # print "Cropped face size ", face.shape[1], face.shape[0]
     print "Resizing face to width=", width
-    resized_face = resize(face, width=width)
-    return resized_face
+    face = resize(image, width=width)
+    return face
 
 
 
