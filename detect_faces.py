@@ -2,7 +2,7 @@
 # python detect_faces.py --face cascades/haarcascade_frontalface_default.xml --image images/obama.png
 
 # import the necessary packages
-import argparse, cv2
+import argparse, cv2, os, uuid
 from utils.eyetracker import EyeTracker
 from utils import imgutils
 
@@ -52,7 +52,15 @@ for rect in rects:
     print "Rectangle: x1=%d y1=%d x2=%d y2=%d", (rect[0], rect[1], rect[2], rect[3])
     print "Cropped: %d:%d, %d:%d", (rect[1], rect[3], rect[0], rect[2])
 
+# Write the cropped image
+dirname, filename = os.path.split(os.path.relpath(args["image"]))
+newfile = dirname + "/face-" + str(uuid.uuid4()) + ".jpg"
+print "Writing " + filename + " to " + newfile
+cv2.imwrite(newfile, cropped)
+
 # show the detected faces
 cv2.imshow("Faces", frame)
 cv2.imshow("Cropped", cropped)
 cv2.waitKey(0)
+
+
