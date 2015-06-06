@@ -16,6 +16,7 @@ ap.add_argument("-i", "--images", required = True,
 args = vars(ap.parse_args())
 
 # Setup face finder and eye tracker
+# TODO - Rework to just use Face Detection?
 et = EyeTracker(args["face"], args["eye"])
 
 # Get list of images
