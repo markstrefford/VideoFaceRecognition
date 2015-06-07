@@ -2,6 +2,8 @@ Face Recognition From Streaming Video
 
 This library is designed to recognise faces from a streaming video source.  It is based on the following:
 
+https://github.com/berak/opencv_smallfry/blob/master/facerec_online.py
+
 OpenCV Face Recognition Tutorials
 http://docs.opencv.org/modules/contrib/doc/facerec/facerec_tutorial.html
 http://docs.opencv.org/modules/contrib/doc/facerec/tutorial/facerec_video_recognition.html

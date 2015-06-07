@@ -67,7 +67,7 @@ def cropface(image, (x1, y1), (x2, y2), width=75):
     face_height = y2 - y1
     face_aspect = face_width / face_height
     print "image size ", image.shape[1], image.shape[0]
-    print "Cropping and resizing face to width=", width
+    print "Cropping and resizing face to width=", y1, y2, x1, x2, width
     face = resize(image[y1 : y2, x1 : x2], width=width)
     return face
 
