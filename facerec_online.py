@@ -81,7 +81,7 @@ def read_images(path, sz=None):
                 except IOError, (errno, strerror):
                     print "I/O error({0}): {1}".format(errno, strerror)
                 except:
-                    print "Unexpected error:", sys.exc_info()[0]
+                    print "Unexpected error: {}".format(sys.exc_info()[0])
                     raise
             c = c+1
             z.append(subdirname)
