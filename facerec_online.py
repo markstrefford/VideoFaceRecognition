@@ -78,10 +78,10 @@ def read_images(path, sz=None):
                         im = cv2.resize(im, sz)
                     X.append(np.asarray(im, dtype=np.uint8))
                     y.append(c)
-                except IOError as (errno, strerror):
-                    print "I/O error({0}): {1}".format(errno, strerror)
+                except IOError as err:
+                    print ("I/O error: {}".format(err))
                 except:
-                    print "Unexpected error: {}".format(sys.exc_info()[0])
+                    print ("Unexpected error: {}".format(sys.exc_info()[0]))
                     raise
             c = c+1
             z.append(subdirname)
@@ -96,7 +96,7 @@ def retrain( imgpath, model,sz ) :
     # read in the image data. This must be a valid path!
     X,y,names = read_images(imgpath,sz)
     if len(X) == 0:
-        print "image path empty", imgpath
+        print ("image path empty", imgpath)
         return [[],[],[]]
     # Learn the model. Remember our function returns Python lists,
     # so we use np.asarray to turn them into NumPy lists to make
@@ -111,13 +111,13 @@ if __name__ == "__main__":
     # You'll need the path to your image folder, also we need to find
     # a haar/lbpcascade for detecting faces, e.g. opencv\data\haarcascades\haarcascade_frontalface_alt2.xml
     if len(sys.argv) < 3:
-        print "USAGE: facerec_online.py </path/to/images> <path/to/cascadefile>"
+        print ("USAGE: facerec_online.py </path/to/images> <path/to/cascadefile>")
         sys.exit()
 
-    print "  press 'esc' to quit"
-    print "  press 'a' to append a new face to the database"
-    print "      (you'll be prompted for a name on the console)"
-    print "  press 't' to retrain the model (if you appended faces there)"
+    print ("  press 'esc' to quit")
+    print ("  press 'a' to append a new face to the database")
+    print ("      (you'll be prompted for a name on the console)")
+    print ("  press 't' to retrain the model (if you appended faces there)")
 
     # create the img folder, if nessecary
     imgdir = sys.argv[1]
@@ -132,16 +132,16 @@ if __name__ == "__main__":
     # open the webcam
     cam = cv2.VideoCapture(0)
     if ( not cam.isOpened() ):
-         print "no cam!"
+         print ("no cam!")
          sys.exit()
-    print "cam: ok."
+    print ("cam: ok.")
 
     # load the cascadefile:
     cascade = cv2.CascadeClassifier(sys.argv[2])
     if ( cascade.empty() ):
-         print "no cascade!"
+         print ("no cascade!")
          sys.exit()
-    print "cascade:",sys.argv[2]
+    print ("cascade:",sys.argv[2])
 
     # Create the model. We are going to use the default
     # parameters for this simple example, please read the documentation
@@ -152,7 +152,7 @@ if __name__ == "__main__":
 
     # train it from faces in the imgdir:
     images,labels,names = retrain(imgdir,model,face_size)
-    print "trained:",len(images),"images",len(names),"persons"
+    print ("trained:",len(images),"images",len(names),"persons")
 
     while True:
         ret, img = cam.read()
@@ -186,7 +186,7 @@ if __name__ == "__main__":
 
         # 'a' pressed, add person to the database
         if (k == 97) and (roi!=None):
-            print "please input the name: "
+            print ("please input the name: ")
             name = sys.stdin.readline().strip('\r').strip('\n')
             # make a folder for that person:
             dirname = os.path.join(imgdir,name)
@@ -196,10 +196,10 @@ if __name__ == "__main__":
                 pass # dir already existed
             # save image
             path=os.path.join(dirname,"%d.png" %(rand.uniform(0,10000)))
-            print "added:",path
+            print ("added:",path)
             cv2.imwrite(path,roi)
 
         # if enough new data was collected, retrain the model
         if (k == 116): # 't' pressed
             images,labels,names = retrain(imgdir,model,face_size)
-            print "trained:",len(images),"images",len(names),"persons"
+            print ("trained:",len(images),"images",len(names),"persons")
