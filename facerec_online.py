@@ -78,7 +78,7 @@ def read_images(path, sz=None):
                         im = cv2.resize(im, sz)
                     X.append(np.asarray(im, dtype=np.uint8))
                     y.append(c)
-                except IOError, (errno, strerror):
+                except IOError as (errno, strerror):
                     print "I/O error({0}): {1}".format(errno, strerror)
                 except:
                     print "Unexpected error: {}".format(sys.exc_info()[0])
